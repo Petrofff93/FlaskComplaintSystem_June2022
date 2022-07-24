@@ -11,6 +11,7 @@ class BaseUserModel(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     phone_number = db.Column(db.String(14), nullable=False)
+    iban = db.Column(db.String(22), nullable=False)
 
 
 class ComplainerModel(BaseUserModel):
