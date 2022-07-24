@@ -11,10 +11,10 @@ from helpers.wise_response_helper import wise_response_status_code_check
 
 class WiseService:
     def __init__(self):
-        self.main_url = config('WISE_URL')
+        self.main_url = config("WISE_URL")
         self.headers = {
-            'Content-Type': 'application/json',
-            'Authorization': f'Bearer {config("WISE_TOKEN")}',
+            "Content-Type": "application/json",
+            "Authorization": f'Bearer {config("WISE_TOKEN")}',
         }
         profile_id = self._get_profile_id()
         self.profile_id = profile_id
@@ -69,7 +69,10 @@ class WiseService:
         return wise_response_status_code_check(resp)
 
     def fund_transfer(self, transfer_id):
-        url = self.main_url + f"/v3/profiles/{self.profile_id}/transfers/{transfer_id}/payments"
+        url = (
+            self.main_url
+            + f"/v3/profiles/{self.profile_id}/transfers/{transfer_id}/payments"
+        )
         resp = requests.post(url, headers=self.headers)
         return wise_response_status_code_check(resp)
 

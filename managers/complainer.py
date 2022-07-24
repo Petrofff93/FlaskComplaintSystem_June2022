@@ -9,7 +9,9 @@ from models import ComplainerModel
 class ComplainerManager:
     @staticmethod
     def register(complainer_data):
-        complainer_data['password'] = generate_password_hash(complainer_data['password'])
+        complainer_data["password"] = generate_password_hash(
+            complainer_data["password"]
+        )
         user = ComplainerModel(**complainer_data)
         db.session.add(user)
         return AuthManager.encode_token(user)
@@ -23,7 +25,3 @@ class ComplainerManager:
         if check_password_hash(complainer.password, login_data["password"]):
             return AuthManager.encode_token(complainer)
         raise BadRequest("Wrong credentials!")
-
-
-
-

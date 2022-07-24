@@ -15,32 +15,20 @@ class BaseUserModel(db.Model):
 
 
 class ComplainerModel(BaseUserModel):
-    __tablename__ = 'complainer'
+    __tablename__ = "complainer"
 
-    complaints = db.relationship('ComplaintModel', backref='complaints', lazy='dynamic')
-    role = db.Column(
-        db.Enum(RoleType),
-        default=RoleType.complainer,
-        nullable=False
-    )
+    complaints = db.relationship("ComplaintModel", backref="complaints", lazy="dynamic")
+    role = db.Column(db.Enum(RoleType), default=RoleType.complainer, nullable=False)
 
 
 class ApproverModel(BaseUserModel):
-    __tablename__ = 'approver'
+    __tablename__ = "approver"
 
     certificate = db.Column(db.String(255), nullable=False)
-    role = db.Column(
-        db.Enum(RoleType),
-        default=RoleType.approver,
-        nullable=False
-    )
+    role = db.Column(db.Enum(RoleType), default=RoleType.approver, nullable=False)
 
 
 class AdministratorModel(BaseUserModel):
-    __tablename__ = 'administrator'
+    __tablename__ = "administrator"
 
-    role = db.Column(
-        db.Enum(RoleType),
-        default=RoleType.admin,
-        nullable=False
-    )
+    role = db.Column(db.Enum(RoleType), default=RoleType.admin, nullable=False)

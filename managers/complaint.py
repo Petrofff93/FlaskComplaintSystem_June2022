@@ -16,23 +16,35 @@ class ComplaintManager:
         complaint = ComplaintModel(**data)
         db.session.add(complaint)
         db.session.flush()
-        ComplaintManager.issue_transaction(data["amount"], f"{user.first_name} {user.last_name}", user.iban,
-                                           complaint.id)
+        ComplaintManager.issue_transaction(
+            data["amount"],
+            f"{user.first_name} {user.last_name}",
+            user.iban,
+            complaint.id,
+        )
         return complaint
 
     @staticmethod
     def approve(complaint_id):
         wise_service = WiseService()
-        transaction = TransactionModel.query.filter_by(complaint_id=complaint_id).first()
+        transaction = TransactionModel.query.filter_by(
+            complaint_id=complaint_id
+        ).first()
         wise_service.fund_transfer(transaction.transfer_id)
-        ComplaintModel.query.filter_by(id=complaint_id).update({"status": State.approved})
+        ComplaintModel.query.filter_by(id=complaint_id).update(
+            {"status": State.approved}
+        )
 
     @staticmethod
     def reject(complaint_id):
         wise_service = WiseService()
-        transaction = TransactionModel.query.filter_by(complaint_id=complaint_id).first()
+        transaction = TransactionModel.query.filter_by(
+            complaint_id=complaint_id
+        ).first()
         wise_service.cancel_transfer(transaction.transfer_id)
-        ComplaintModel.query.filter_by(id=complaint_id).update({"status": State.rejected})
+        ComplaintModel.query.filter_by(id=complaint_id).update(
+            {"status": State.rejected}
+        )
 
     @staticmethod
     def issue_transaction(amount, full_name, iban, complaint_id):

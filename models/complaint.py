@@ -5,7 +5,7 @@ from models.enums import State
 
 
 class ComplaintModel(db.Model):
-    __tablename__ = 'complaints'
+    __tablename__ = "complaints"
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -13,10 +13,8 @@ class ComplaintModel(db.Model):
     photo_url = db.Column(db.String(255), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     created_on = db.Column(db.DateTime, server_default=func.now())
-    status = db.Column(
-        db.Enum(State),
-        default=State.pending,
-        nullable=False
+    status = db.Column(db.Enum(State), default=State.pending, nullable=False)
+    complainer_id = db.Column(
+        db.Integer, db.ForeignKey("complainer.id"), nullable=False
     )
-    complainer_id = db.Column(db.Integer, db.ForeignKey('complainer.id'), nullable=False)
-    complainer = db.relationship('ComplainerModel')
+    complainer = db.relationship("ComplainerModel")

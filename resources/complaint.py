@@ -40,4 +40,3 @@ class RejectComplaintResource(Resource):
     def put(self, id):
         ComplaintManager.reject(id)
         return 204
-
