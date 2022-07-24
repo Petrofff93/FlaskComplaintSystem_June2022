@@ -39,6 +39,7 @@ class WiseService:
             "profile": self.profile_id,
         }
         resp = requests.post(url, headers=self.headers, data=json.dumps(data))
+        # In order to avoid writing repetitive code for the response, the response check is added via little helper func
         return wise_response_status_code_check(resp)
 
     def create_recipient_account(self, full_name, iban):
