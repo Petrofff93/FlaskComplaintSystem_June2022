@@ -2,6 +2,8 @@ from db import db
 from models import ComplaintModel, RoleType, State, TransactionModel
 from services.wise import WiseService
 
+wise_service = WiseService()
+
 
 class ComplaintManager:
     @staticmethod
@@ -26,7 +28,6 @@ class ComplaintManager:
 
     @staticmethod
     def approve(complaint_id):
-        wise_service = WiseService()
         transaction = TransactionModel.query.filter_by(
             complaint_id=complaint_id
         ).first()
@@ -37,7 +38,6 @@ class ComplaintManager:
 
     @staticmethod
     def reject(complaint_id):
-        wise_service = WiseService()
         transaction = TransactionModel.query.filter_by(
             complaint_id=complaint_id
         ).first()
@@ -48,7 +48,6 @@ class ComplaintManager:
 
     @staticmethod
     def issue_transaction(amount, full_name, iban, complaint_id):
-        wise_service = WiseService()
         quote_id = wise_service.create_quote(amount)
         recipient_id = wise_service.create_recipient_account(full_name, iban)
         transfer_id = wise_service.create_transfer(recipient_id, quote_id)
