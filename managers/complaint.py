@@ -1,8 +1,16 @@
 from db import db
-from models import ComplaintModel, RoleType, State, TransactionModel
+from models import ComplaintModel, RoleType, TransactionModel
 from services.wise import WiseService
+import os
+import uuid
+
+from constants import TEMP_FILE_FOLDER
+from models.enums import State
+from services.s3 import S3Service
+from helpers.photo_decode_helper import decode_photo
 
 wise_service = WiseService()
+s3 = S3Service()
 
 
 class ComplaintManager:
@@ -14,7 +22,22 @@ class ComplaintManager:
 
     @staticmethod
     def create(data, user):
+        """
+        Decode the base64 encoded photo,
+        uploads it to s3 and set the photo url to
+        the s3 generated url.
+        Flushes the row
+        """
         data["complainer_id"] = user.id
+        encoded_photo = data.pop("photo")
+        extension = data.pop("photo_extension")
+        name = f"{str(uuid.uuid4())}.{extension}"
+        path = os.path.join(TEMP_FILE_FOLDER, f"{name}")
+        decode_photo(path, encoded_photo)
+        url = s3.upload_photo(path, name, extension)
+        data["photo_url"] = url
+        os.remove(path)
+
         complaint = ComplaintModel(**data)
         db.session.add(complaint)
         db.session.flush()
